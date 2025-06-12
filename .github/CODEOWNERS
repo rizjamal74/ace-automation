@@ -7,7 +7,7 @@
 # the security team (secops). By uncommenting this next line, even the network team needs the approval
 # of security to make changes to this file.
 
-# /day-two/allowed_domains.tf @<secops> @<devops>
+# /dcf/allowed_domains.tf @<secops> @<devops>
 
 # Notice the development team (devops) is also required to review changes to allowed_domains.tf as its
 # a good practice to have a secondary (code review) approval from the team making changes as well as

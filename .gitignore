@@ -33,7 +33,3 @@ override.tf.json
 # example: *tfplan*
 
 *.tfvars
-
-# Ignore docs branch paths
-/docs/**
-/docs_source/**
