@@ -1,11 +1,18 @@
 locals {
-  allowed_https_domains = [
-    "aviatrix.com",
-    "*.amazon.com",
-    "*.google.com",
-    "github.com",
-    "*.microsoft.com",
-  ]
+  allowed_https_domains = []
+}
+
+resource "aviatrix_web_group" "allow_internet_https" {
+  name = "allow-internet-https"
+  selector {
+    dynamic "match_expressions" {
+      for_each = toset(local.allowed_https_domains)
+
+      content {
+        snifilter = match_expressions.value
+      }
+    }
+  }
 }
 
 resource "aviatrix_smart_group" "rfc1918" {
@@ -23,37 +30,7 @@ resource "aviatrix_smart_group" "rfc1918" {
   }
 }
 
-resource "aviatrix_web_group" "allow_internet_https" {
-  name = "allow-internet-https"
-  selector {
-    dynamic "match_expressions" {
-      for_each = toset(local.allowed_https_domains)
-
-      content {
-        snifilter = match_expressions.value
-      }
-    }
-  }
-}
-
 resource "aviatrix_distributed_firewalling_policy_list" "default" {
-  # policies {
-  #   name     = "allow-rfc1918"
-  #   action   = "PERMIT"
-  #   priority = 1000
-  #   protocol = "tcp"
-  #   logging  = true
-  #   watch    = false
-  #   port_ranges {
-  #     lo = 80
-  #   }
-  #   src_smart_groups = [
-  #     aviatrix_smart_group.rfc1918.uuid
-  #   ]
-  #   dst_smart_groups = [
-  #     aviatrix_smart_group.rfc1918.uuid
-  #   ]
-  # }
   policies {
     name     = "allow-internet"
     action   = "PERMIT"
