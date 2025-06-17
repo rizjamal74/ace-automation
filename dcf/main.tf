@@ -35,9 +35,12 @@ resource "aviatrix_distributed_firewalling_policy_list" "default" {
     name     = "allow-internet"
     action   = "PERMIT"
     priority = 1001
-    protocol = "Any"
+    protocol = "TCP"
     logging  = true
     watch    = false
+    port_ranges {
+      lo = 443
+    }
     src_smart_groups = [
       aviatrix_smart_group.rfc1918.uuid
     ]
