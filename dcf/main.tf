@@ -58,9 +58,9 @@ resource "aviatrix_distributed_firewalling_policy_list" "default" {
   }
 
   policies {
-    name     = "allow-rfc1918"
+    name     = "allow-rfc1918-a"
     action   = "PERMIT"
-    priority = 1002
+    priority = 1005
     protocol = "TCP"
     logging  = true
     watch    = false
