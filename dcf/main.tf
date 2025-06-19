@@ -9,10 +9,10 @@ locals {
 
 resource "aviatrix_web_group" "allow_internet_https" {
   name = "allow-internet-https"
+
   selector {
     dynamic "match_expressions" {
       for_each = toset(local.allowed_https_domains)
-
       content {
         snifilter = match_expressions.value
       }
@@ -22,6 +22,7 @@ resource "aviatrix_web_group" "allow_internet_https" {
 
 resource "aviatrix_smart_group" "rfc1918" {
   name = "rfc1918"
+
   selector {
     match_expressions {
       cidr = "10.0.0.0/8"
@@ -43,9 +44,11 @@ resource "aviatrix_distributed_firewalling_policy_list" "default" {
     protocol = "TCP"
     logging  = true
     watch    = false
+
     port_ranges {
       lo = 443
     }
+
     src_smart_groups = [
       aviatrix_smart_group.rfc1918.uuid
     ]
@@ -58,15 +61,17 @@ resource "aviatrix_distributed_firewalling_policy_list" "default" {
   }
 
   policies {
-    name     = "allow-rfc1918"
+    name     = "allow-rfc1918-a"
     action   = "PERMIT"
-    priority = 1002
+    priority = 1005
     protocol = "TCP"
     logging  = true
     watch    = false
+
     port_ranges {
       lo = 80
     }
+
     src_smart_groups = [
       aviatrix_smart_group.rfc1918.uuid
     ]
@@ -74,7 +79,7 @@ resource "aviatrix_distributed_firewalling_policy_list" "default" {
       aviatrix_smart_group.rfc1918.uuid
     ]
   }
-  
+
   policies {
     name                     = "default-deny-all"
     action                   = "DENY"
@@ -83,6 +88,7 @@ resource "aviatrix_distributed_firewalling_policy_list" "default" {
     logging                  = true
     watch                    = false
     exclude_sg_orchestration = true
+
     src_smart_groups = [
       "def000ad-0000-0000-0000-000000000000" # Anywhere
     ]
